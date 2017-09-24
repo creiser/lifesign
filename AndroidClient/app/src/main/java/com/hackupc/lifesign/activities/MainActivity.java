@@ -1,4 +1,4 @@
-package com.hackupc.lifesign;
+package com.hackupc.lifesign.activities;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.hackupc.lifesign.R;
+import com.hackupc.lifesign.application.Lifesign;
+import com.hackupc.lifesign.application.TimerTask;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -105,5 +109,17 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Lifesign.activityResumed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Lifesign.activityPaused();
     }
 }

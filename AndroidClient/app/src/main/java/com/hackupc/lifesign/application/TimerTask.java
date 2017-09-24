@@ -1,4 +1,4 @@
-package com.hackupc.lifesign;
+package com.hackupc.lifesign.application;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import com.hackupc.lifesign.application.PromptUserStatus;
 
 import static android.content.Context.ALARM_SERVICE;
 
@@ -15,13 +17,14 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class TimerTask {
 
+    private boolean taskRunning;
+
     public TimerTask(Context context, int promptInterval){
         System.out.println("TimerTask: " + promptInterval);
         startLifeSignTask(context, promptInterval);
     }
 
     public void startLifeSignTask(Context context, int promptInterval){
-        int interval = promptInterval;
         setPromptInterval(context, promptInterval);
         promptUser(context);
         setPromptInterval(context, 1);
@@ -54,7 +57,7 @@ public class TimerTask {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         processTimer.setRepeating(AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis(), promptInterval*100, pendingIntent);
+                System.currentTimeMillis(), promptInterval, pendingIntent);
     }
 
 }

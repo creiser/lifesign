@@ -1,13 +1,12 @@
-package com.hackupc.lifesign;
+package com.hackupc.lifesign.application;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.widget.Toast;
 
-import static android.R.attr.duration;
+import com.hackupc.lifesign.activities.MainActivity;
 
 /**
  * Created by tvaisanen on 9/18/17.
