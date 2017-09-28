@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         appContext = this;
-        timerTask = new TimerTask(this, 30);
+        timerTask = new TimerTask(this, 15);
     }
 
 
