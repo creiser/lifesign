@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,6 +24,8 @@ import com.android.volley.toolbox.Volley;
 import com.hackupc.lifesign.R;
 import com.hackupc.lifesign.activities.MainActivity;
 import com.hackupc.lifesign.intents.lifesignAlive;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +38,7 @@ public class PromptUserStatus extends BroadcastReceiver {
 
     private static final String TAG = "app.PromptUserStatus";
     private static final String NETWORKTAG = "app.NetworkResponse";
-
+    private static final RequestAPI requestAPI = RequestAPI.getInstance();
 
 
     public void postStatus() {
@@ -44,16 +47,14 @@ public class PromptUserStatus extends BroadcastReceiver {
         String url = "http://10.0.2.2:5000/hello";
 
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
+                new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // response
                         Log.v(NETWORKTAG, "Response: " + response);
                     }
                 },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // error
@@ -62,35 +63,51 @@ public class PromptUserStatus extends BroadcastReceiver {
                 }
         ) {
             @Override
-            protected Map<String, String> getParams()
-            {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("name", "CHRIS");
                 params.put("location", "BARCELONA");
 
                 return params;
             }
-        };
-        queue.add(postRequest);
 
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        Log.v(NETWORKTAG, "Response: " + response);
-                    }
-                }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.v(NETWORKTAG, "Response: ERROR");
-                Log.e(NETWORKTAG, error.toString());
+            public byte[] getBody() throws AuthFailureError {
+                HashMap<String, String> params2 = new HashMap<String, String>();
+                params2.put("name", "Chris The Beardyman");
+                params2.put("subject", "Still alive, no need to call the police.");
+                return new JSONObject(params2).toString().getBytes();
             }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+
     }
+
+    ;
+    queue.add(postRequest);
+
+    // Request a string response from the provided URL.
+    StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    // Display the first 500 characters of the response string.
+                    Log.v(NETWORKTAG, "Response: " + response);
+                }
+            }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.v(NETWORKTAG, "Response: ERROR");
+            Log.e(NETWORKTAG, error.toString());
+        }
+    });
+    // Add the request to the RequestQueue.
+    queue.add(stringRequest);
+}
 
 
     @Override
@@ -110,14 +127,14 @@ public class PromptUserStatus extends BroadcastReceiver {
             alertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    postStatus();
+                    requestAPI.postStatus();
                 }
             });
 
             alertBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    postStatus();
+                    requestAPI.postStatus();
                 }
             });
 
