@@ -127,14 +127,16 @@ public class PromptUserStatus extends BroadcastReceiver {
             alertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    requestAPI.postStatus();
+                    String payload = "Alive: Yes";
+                    requestAPI.postRequest(payload);
                 }
             });
 
             alertBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    requestAPI.postStatus();
+                    String payload = "Alive: No";
+                    requestAPI.postRequest(payload);
                 }
             });
 

@@ -24,6 +24,8 @@ public class RequestAPI {
 
     private static final RequestAPI instance = new RequestAPI();
     private static final String TAG = "Lifesign.RequestAPI";
+    // If you're using your device you should use your hosts IP, this one uses the emulator.
+    private static final String SERVER_URL = "http://10.0.2.2:5000/status";
 
 
     //private constructor to avoid client applications to use constructor
@@ -64,7 +66,7 @@ public class RequestAPI {
             public byte[] getBody() throws AuthFailureError {
                 HashMap<String, String> params2 = new HashMap<String, String>();
                 params2.put("name", "Chris The Beardyman");
-                params2.put("subject", "Still alive, no need to call the police.");
+                params2.put("status", "status message");
                 return new JSONObject(params2).toString().getBytes();
             }
 
@@ -76,16 +78,9 @@ public class RequestAPI {
         return postRequest;
     }
 
-    public static void postStatus() {
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(MainActivity.appContext);
-        String url = "http://10.0.2.2:5000/hello";
-
-        StringRequest postRequest = getPostRequest(url);
-        queue.add(postRequest);
-
+    private static StringRequest getGetRequest(String url){
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        StringRequest getRequest = new StringRequest(Request.Method.GET, SERVER_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -100,7 +95,33 @@ public class RequestAPI {
             }
         });
         // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        return getRequest;
+
+    }
+
+    public static void postRequest(String payload) {
+        /*
+        * Static method for sending a post request to the server
+        * todo: define what parameters should be passed and what to do with the responses.
+        * */
+
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.appContext);
+        StringRequest postRequest = getPostRequest(SERVER_URL);
+        queue.add(postRequest);
+
+
+    }
+
+    public static void getRequest() {
+        /*
+        * Static method for sending a get request to the server
+        * todo: define what parameters should be passed and what to do with the responses.
+        * */
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.appContext);
+        StringRequest getRequest = getGetRequest(SERVER_URL);
+        queue.add(getRequest);
     }
 
 }
